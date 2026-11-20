@@ -6,9 +6,9 @@
 
 ## 🎬 Uitlegvideo
 
-[![Uitlegvideo DraveMaatje](docs/video.jpg)](https://github.com/mbrv4ever/DraveMaatje/releases/latest)
+[![Uitlegvideo DraveMaatje](https://dravenlock.nl/video/DraveMaatje.jpg)](https://dravenlock.nl/video/DraveMaatje.mp4)
 
-[▶ Bekijk de uitlegvideo](https://github.com/mbrv4ever/DraveMaatje/releases/latest) (1 minuut 45, Nederlands). Je vindt hem bij de download: **DraveMaatje_uitleg.mp4**.
+[▶ Bekijk de uitlegvideo](https://dravenlock.nl/video/DraveMaatje.mp4) (1 minuut 45, Nederlands). Hij zit ook in de download.
 
 ## Wat kan het Maatje?
 
