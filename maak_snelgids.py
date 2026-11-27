@@ -14,7 +14,7 @@ ic = os.path.join(HERE, 'assets', 'icon_256.png')
 if os.path.exists(ic):
     L.append(Image(ic, width=2.6 * cm, height=2.6 * cm, hAlign='LEFT'))
 L += [Paragraph('DraveMaatje - snelgids', t),
-      Paragraph('Versie 0.6. Je maatje voor de pc. Voor ouderen en iedereen die geen zin heeft in pc-gedoe. Het Maatje kijkt je pc na, helpt met instellingen en beschermt je tegen oplichters. In gewone taal, en het leest alles hardop voor.', b)]
+      Paragraph('Versie 0.7. Je maatje voor de pc. Voor ouderen en iedereen die geen zin heeft in pc-gedoe. Het Maatje kijkt je pc na, helpt met instellingen en beschermt je tegen oplichters. In gewone taal, en het leest alles hardop voor.', b)]
 
 
 def blok(kop, regels, plaatje=None):
@@ -53,6 +53,12 @@ blok('4. Bescherm mij (oranje) - tegen oplichters', [
     '<b>Is deze website echt?</b> Plak een websiteadres. Het Maatje herkent nep-namen, zoals <i>rabobank-veilig-inloggen.nl</i>.',
     '<b>Gouden regels</b>: tien regels tegen oplichters, voorgelezen.',
     'Het Maatje kan het nooit 100% zeker weten. Twijfel je? Bel de afzender zelf, via een nummer dat je zelf opzoekt.'], 'gids_bes.png')
+blok('5. Is mijn pc nog van mij? (zeegroen) - nieuw in 0.7', [
+    'Windows zet na een update soms stiekem dingen weer aan: reclame, tips, zoeken via internet, of de AI van Microsoft (Copilot). Druk op deze knop, dan kijkt het Maatje of alles nog uit staat.',
+    'De eerste keer onthoudt het Maatje hoe het nu staat. Elke volgende keer zegt het meteen: <b>"Windows heeft iets weer aangezet"</b>, of <b>"er is niets teruggezet"</b>.',
+    'Bij alles wat nog aan staat, zegt het Maatje <b>waar je het uitzet</b>, stap voor stap.',
+    'Het Maatje kijkt ook of er sinds de vorige keer <b>nieuwe programma&#39;s meestarten</b> met de pc.',
+    'Het Maatje kijkt alleen. Het verandert hier zelf niets aan je pc.'])
 blok('Zo stel je het in', [
     '<b>Lees nog eens voor</b> - het Maatje zegt het nog een keer. De toets <b>Esc</b> maakt het meteen stil.',
     '<b>Voorlezen: AAN / UIT</b> - liever alleen lezen? Zet het uit.',

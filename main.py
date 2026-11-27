@@ -16,7 +16,7 @@ import os, sys, time, threading, locale, traceback, webbrowser, json
 HERE = os.path.dirname(sys.executable) if getattr(sys, "frozen", False) else os.path.dirname(os.path.abspath(__file__))
 CACHE = os.path.join(HERE, "cache")
 os.makedirs(CACHE, exist_ok=True)
-VERSIE = "0.6"
+VERSIE = "0.7"
 try:
     NL = (locale.getlocale()[0] or "nl").lower().startswith(("nl", "dutch"))
 except Exception:
@@ -93,6 +93,18 @@ TX = {
                        "Shall I turn off the remote program now? Then the person on the other end can't get into your pc anymore."),
     "bes_bezig": ("Ik kijk even. Een momentje...", "Checking. One moment..."),
     "bes_regels_kop": ("De gouden regels tegen oplichters:", "The golden rules against scammers:"),
+    "van": ("Is mijn pc nog van mij?", "Is my pc still mine?"),
+    "van_bezig": ("Ik kijk of Windows stiekem iets heeft aangezet. Een momentje...",
+                  "I'm checking whether Windows quietly switched something on. One moment..."),
+    "van_weer": ("Let op! Windows heeft iets weer aangezet: %s. Hieronder staat hoe je het uitzet.",
+                 "Careful! Windows switched something back on: %s. Below is how to switch it off."),
+    "van_eerst": ("Ik heb gekeken en onthouden hoe het nu staat. Volgende keer zie ik of Windows iets verandert.",
+                  "I checked and remembered how things are now. Next time I'll see if Windows changes something."),
+    "van_rust": ("Sinds de vorige keer heeft Windows niets teruggezet.", "Since last time Windows didn't switch anything back."),
+    "van_aan": ("Er staan nog %d dingen aan die met Microsoft praten of reclame tonen.",
+                "%d things are still on that talk to Microsoft or show ads."),
+    "van_alles": ("Alles staat netjes uit. Je pc is van jou!", "Everything is switched off. Your pc is yours!"),
+    "van_goed": ("Deze %d dingen staan netjes uit", "These %d things are switched off"),
     "doneer": ("Doneren via PayPal", "Donate via PayPal"), "sluit": ("Sluiten", "Close"),
 }
 
@@ -126,6 +138,7 @@ def main():
     import klusjes                                              # 0.2
     import paspoort                                             # 0.3
     import bescherm                                             # 0.4
+    import wachter                                              # 0.7: is mijn pc nog van mij?
     from PyQt6.QtCore import Qt, pyqtSignal, QObject, QTimer
     from PyQt6.QtGui import QFont, QIcon, QShortcut, QKeySequence
     from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
@@ -181,7 +194,8 @@ def main():
         QPushButton[soort="help"] { background:#284670; border-color:#6edcff; }
         QPushButton[soort="klus"] { background:#2a2440; border-color:#6edcff; }
         QPushButton[soort="pas"] { background:#5a3a70; border-color:#d29cff; }
-        QPushButton[soort="bes"] { background:#7a3a20; border-color:#ffa070; }
+        QPushButton[soort="van"] { background:#1f5a5a; border-color:#5ee0c8; }
+QPushButton[soort="bes"] { background:#7a3a20; border-color:#ffa070; }
         QPlainTextEdit { background:#0f0d17; border:3px solid #ffa070; border-radius:14px; padding:8px; color:white; }
         QLineEdit { background:#0f0d17; border:3px solid #6edcff; border-radius:14px; padding:6px 14px; color:white; }
         QPushButton:disabled { background:#1b1728; border-color:#3a3350; color:#6a6680; }
@@ -213,6 +227,7 @@ def main():
     b_help = knop(T("help"), "help", 80)                        # 0.2
     b_pas = knop(T("pas"), "pas", 80)                           # 0.3
     b_bes = knop(T("bes"), "bes", 80)                           # 0.4
+    b_van = knop("🛡  " + T("van"), "van", 80)                    # 0.7
     sv = QLabel(""); sv.setWordWrap(True)
     vraag = QFrame(); vraag.setObjectName("vraag")
     vraag_lbl = QLabel(""); vraag_lbl.setWordWrap(True)
@@ -233,7 +248,7 @@ def main():
         onder.addWidget(x)
     L = QVBoxLayout(); L.setContentsMargins(26, 20, 26, 20); L.setSpacing(14)
     rij2 = QHBoxLayout(); rij2.setSpacing(14); rij2.addWidget(b_help); rij2.addWidget(b_pas); rij2.addWidget(b_bes)
-    L.addLayout(kop); L.addWidget(b_kijk); L.addLayout(rij2); L.addWidget(sv); L.addWidget(vraag); L.addWidget(scroll, 1)
+    L.addLayout(kop); L.addWidget(b_kijk); L.addLayout(rij2); L.addWidget(b_van); L.addWidget(sv); L.addWidget(vraag); L.addWidget(scroll, 1)
     L.addWidget(b_ruim); L.addLayout(onder)
     thuis = QWidget(); thuis.setLayout(L)
 
@@ -272,7 +287,7 @@ def main():
         for x in (b_p_maak, b_p_verg):
             x.setFont(F(4))
         b_p_map.setFont(F(0))
-        b_bes.setFont(F(6))
+        b_bes.setFont(F(6)); b_van.setFont(F(6))
         help_scherm.zet_maat(st["maat"]); bes_scherm.zet_maat(st["maat"])          # 0.6
         vraag_lbl.setFont(F(4)); b_ja.setFont(F(10)); b_nee.setFont(F(10)); b_ruim.setFont(F(4))
         for x in (b_nog, b_stem, b_kleiner, b_groter, b_info):
@@ -285,7 +300,7 @@ def main():
 
     def knoppen():
         vrij = not st["bezig"] and not st["vraag"]
-        for b in (b_kijk, b_ruim, b_nog):
+        for b in (b_kijk, b_ruim, b_nog, b_van):
             b.setEnabled(vrij)
 
     def leeg_lijst():
@@ -348,6 +363,38 @@ def main():
         st["uitslag"] = r
         toon(r)
     sein.uitslag.connect(klaar)
+
+    # ---------- 0.7: is mijn pc nog van mij? (Wachter, alleen kijken)
+    def mijn():
+        if st["bezig"]:
+            return
+        st["bezig"] = True; vraag.hide(); st["vraag"] = False; knoppen()
+        sv.setText(T("van_bezig")); sv.setStyleSheet("color:#ffdc5a;"); leeg_lijst(); b_ruim.hide()
+        spreek([T("van_bezig")])
+
+        def werk():
+            try:
+                kaart = os.path.join(HERE, "cache")
+                priv, veranderd, eerste, _ = wachter.privacy_veranderd(kaart, taal)
+                opstart = wachter.kijk_opstart_nieuw(kaart, taal)
+                aan = [b for b in priv if b["status"] != "goed"]
+                goed = [b for b in priv if b["status"] == "goed"]
+                if veranderd:
+                    zin = T("van_weer") % ", ".join(b["titel"] for b in veranderd)
+                elif eerste:
+                    zin = T("van_eerst")
+                else:
+                    zin = T("van_rust")
+                n_aan = sum(1 for b in aan if b["status"] in ("let_op", "slecht"))
+                zin += " " + (T("van_aan") % n_aan if n_aan else T("van_alles"))
+                lijst_ = aan + opstart
+                if goed:
+                    lijst_.append(wachter.bevinding("privacy", "goed", T("van_goed") % len(goed),
+                                                    ", ".join(b["titel"] for b in goed) + "."))
+                sein.uitslag.emit({"sv": zin, "lijst": lijst_})
+            except Exception as ex:
+                sein.uitslag.emit({"sv": T("fout") % ex, "lijst": []})
+        threading.Thread(target=werk, daemon=True).start()
 
     # ---------- opruimen: eerst vragen
     def vraag_ruim():
@@ -488,7 +535,7 @@ def main():
         h = QHBoxLayout(); h.addWidget(k1); h.addWidget(k2); v.addLayout(h)
         d.exec()
 
-    b_kijk.clicked.connect(kijk); b_ruim.clicked.connect(vraag_ruim)
+    b_kijk.clicked.connect(kijk); b_ruim.clicked.connect(vraag_ruim); b_van.clicked.connect(mijn)
     b_ja.clicked.connect(lambda: antwoord(True)); b_nee.clicked.connect(lambda: antwoord(False))
     b_nog.clicked.connect(lambda: spreek(st["zinnen"]) if st["zinnen"] else spreek([T("uitleg")]))
     b_stem.clicked.connect(wissel_stem); b_groter.clicked.connect(lambda: maat(2)); b_kleiner.clicked.connect(lambda: maat(-2))

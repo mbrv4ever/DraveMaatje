@@ -20,7 +20,7 @@ if exist _bewaar rmdir /s /q _bewaar
 mkdir _bewaar
 if exist "dist\DraveMaatje\paspoorten" xcopy /e /i /y /q "dist\DraveMaatje\paspoorten" "_bewaar\paspoorten" >nul
 for %%f in (maatje_instellingen.json handen_logboek.txt handen_terug.json) do if exist "dist\DraveMaatje\%%f" copy /y "dist\DraveMaatje\%%f" _bewaar\ >nul
-%PY% -m PyInstaller --noconfirm --clean --windowed --onedir --name DraveMaatje --icon assets\icon.ico --hidden-import handen --hidden-import klusjes --hidden-import paspoort --hidden-import bescherm --hidden-import handen_qt --hidden-import stem --hidden-import uitspraak --hidden-import send2trash --collect-all neuvoice --collect-binaries onnxruntime --collect-all sounddevice main.py
+%PY% -m PyInstaller --noconfirm --clean --windowed --onedir --name DraveMaatje --icon assets\icon.ico --hidden-import handen --hidden-import klusjes --hidden-import paspoort --hidden-import bescherm --hidden-import handen_qt --hidden-import wachter --hidden-import stem --hidden-import uitspraak --hidden-import send2trash --collect-all neuvoice --collect-binaries onnxruntime --collect-all sounddevice main.py
 if errorlevel 1 ( echo BOUWEN MISLUKT & pause & exit /b 1 )
 if not exist "dist\DraveMaatje\DraveMaatje.exe" ( echo GEEN EXE GEVONDEN & pause & exit /b 1 )
 xcopy /e /i /y assets "dist\DraveMaatje\assets" >nul

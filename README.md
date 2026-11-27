@@ -16,6 +16,7 @@
 - **Ruim de rommel op** – alleen als jij op **JA** drukt, en alles gaat naar de **prullenbak**. Je kunt het dus altijd terughalen.
 - **Help me met een instelling** – Microsoft verstopt veel instellingen diep. Typ in gewone woorden wat je wilt (*muis groter*, *ik hoor niets*, *wifi doet het niet*). Het Maatje doet het voor je (na JA, met **Terugzetten**), of opent de goede pagina en vertelt stap voor stap wat je moet doen. 20 klusjes.
 - **Pc-paspoort** – gaat je pc naar de reparateur? Maak eerst een paspoort met de serienummers van de onderdelen. Krijg je hem terug, dan zie je zwart op wit of het je **eigen** pc is.
+- **Is mijn pc nog van mij?** – nieuw in 0.7: kijkt of Windows na een update stiekem reclame, tips, internet-zoeken of Copilot weer heeft aangezet, en zegt waar je het uitzet. Ook: wat er nieuw meestart met de pc. Alleen kijken, verandert niets.
 - **Bescherm mij** – tegen oplichters:
   - *Kijkt er iemand mee?* (AnyDesk, TeamViewer en andere meekijk-programma's)
   - *Is dit bericht echt?* Plak een mail, sms of WhatsApp. Het Maatje laat bij elke reden zien wat het zag.
@@ -31,11 +32,11 @@
 - Het komt niet aan je foto's, documenten of wachtwoorden.
 - **Alles blijft op je eigen pc.** Er gaat niets naar internet. Wat het Maatje doet, staat in `handen_logboek.txt`.
 
-*Versie 0.6*
+*Versie 0.7*
 
 ## ⬇️ Downloaden (Windows, geen Python nodig)
 
-### [👉 Download DraveMaatje 0.6](https://github.com/mbrv4ever/DraveMaatje/releases/latest)
+### [👉 Download DraveMaatje 0.7](https://github.com/mbrv4ever/DraveMaatje/releases/latest)
 
 1. Klik op de link en download het **.zip**-bestand.
 2. Pak het uit: rechtsklik → **Alles uitpakken...**
